@@ -1,7 +1,21 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory
 import sqlite3
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=".")
+
+
+# =========================================
+# STATIC FILES
+# =========================================
+
+@app.route("/style.css")
+def style():
+    return send_from_directory(".", "style.css")
+
+
+@app.route("/app.js")
+def javascript():
+    return send_from_directory(".", "app.js")
 
 
 # =========================================
@@ -48,11 +62,8 @@ def home():
 def status():
 
     return jsonify({
-
         "system": "NIRA",
-
         "status": "online"
-
     })
 
 
@@ -64,11 +75,6 @@ def status():
 def analyze():
 
     data = request.get_json()
-
-
-    # =====================================
-    # GET INPUT DATA
-    # =====================================
 
     location = data.get(
         "location",
@@ -95,45 +101,30 @@ def analyze():
 
     score = 0
 
-
-    # Rainfall risk
-
     if rainfall > 80:
-
         score += 40
 
     elif rainfall > 50:
-
         score += 25
 
     else:
-
         score += 10
 
 
-    # Water level risk
-
     if water_level > 75:
-
         score += 40
 
     elif water_level > 50:
-
         score += 25
 
     else:
-
         score += 10
 
 
-    # Drainage risk
-
     if drainage == "blocked":
-
         score += 20
 
     elif drainage == "poor":
-
         score += 10
 
 
@@ -142,19 +133,15 @@ def analyze():
     # =====================================
 
     if score >= 80:
-
         level = "CRITICAL"
 
     elif score >= 60:
-
         level = "HIGH"
 
     elif score >= 40:
-
         level = "MODERATE"
 
     else:
-
         level = "LOW"
 
 
@@ -266,28 +253,21 @@ def analyze():
 
 
     # =====================================
-    # SAVE RESULT TO DATABASE
+    # SAVE RESULT
     # =====================================
 
     save_analysis(
-
         location,
-
         rainfall,
-
         water_level,
-
         drainage,
-
         score,
-
         level
-
     )
 
 
     # =====================================
-    # SEND RESULT TO FRONTEND
+    # SEND RESULT
     # =====================================
 
     return jsonify({
@@ -328,7 +308,6 @@ def history():
 
     cursor = conn.cursor()
 
-
     cursor.execute("""
         SELECT
             id,
@@ -342,14 +321,11 @@ def history():
         ORDER BY id DESC
     """)
 
-
     rows = cursor.fetchall()
 
     conn.close()
 
-
     history_data = []
-
 
     for row in rows:
 
@@ -370,7 +346,6 @@ def history():
             "level": row[6]
 
         })
-
 
     return jsonify(history_data)
 
