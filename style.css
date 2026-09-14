@@ -1,0 +1,972 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #07111f;
+    color: #f5f9ff;
+    line-height: 1.6;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    width: 100%;
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(7,17,31,0.9);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: bold;
+    background: linear-gradient(135deg,#35d6ff,#5967ff);
+    box-shadow: 0 0 25px rgba(53,214,255,0.3);
+}
+
+.brand h1 {
+    font-size: 24px;
+    letter-spacing: 3px;
+}
+
+.brand span {
+    font-size: 10px;
+    color: #8fa3bb;
+}
+
+.system-status {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #9eb1c7;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #3ee58b;
+    border-radius: 50%;
+    margin-right: 7px;
+    box-shadow: 0 0 12px #3ee58b;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    width: 86%;
+    max-width: 1250px;
+    margin: auto;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 650px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 70px;
+    align-items: center;
+}
+
+.tag {
+    color: #45d9ff;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.hero h2 {
+    margin-top: 20px;
+    font-size: clamp(42px, 6vw, 78px);
+    line-height: 1.05;
+    letter-spacing: -3px;
+}
+
+.hero h2 span {
+    color: #7894b3;
+}
+
+.hero p {
+    margin-top: 25px;
+    max-width: 570px;
+    color: #9eb0c5;
+    font-size: 17px;
+}
+
+.primary-btn,
+.analyze-btn {
+    margin-top: 30px;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg,#35d6ff,#5967ff);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.primary-btn:hover,
+.analyze-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(53,214,255,0.2);
+}
+
+/* =========================
+   RISK CARD
+========================= */
+
+.risk-card {
+    padding: 35px;
+    border-radius: 28px;
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    text-align: center;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    color: #8fa3bb;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.live {
+    color: #3ee58b;
+}
+
+.risk-circle {
+    width: 210px;
+    height: 210px;
+    margin: 45px auto 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle,#07111f 60%,transparent 61%),
+        conic-gradient(#35d6ff 0deg,#5967ff 250deg,#23344a 250deg);
+}
+
+.risk-circle strong {
+    display: block;
+    font-size: 45px;
+}
+
+.risk-circle small {
+    color: #8fa3bb;
+    letter-spacing: 2px;
+}
+
+.risk-card h3 {
+    font-size: 20px;
+}
+
+.risk-card p {
+    color: #8fa3bb;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* =========================
+   SIGNALS
+========================= */
+
+.signals {
+    padding: 70px 0;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.section-heading span {
+    color: #35d6ff;
+    font-size: 12px;
+}
+
+.section-heading h3 {
+    font-size: 25px;
+}
+
+.signal-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 18px;
+}
+
+.signal-card {
+    padding: 25px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.045);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon {
+    font-size: 28px;
+}
+
+.signal-card small {
+    display: block;
+    color: #71869f;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.signal-card strong {
+    display: block;
+    margin-top: 4px;
+}
+
+/* =========================
+   ANALYSIS
+========================= */
+
+.analysis {
+    padding: 90px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.analysis-info h2 {
+    margin-top: 18px;
+    font-size: 45px;
+    line-height: 1.1;
+}
+
+.analysis-info h2 span {
+    color: #7894b3;
+}
+
+.analysis-info p {
+    margin-top: 20px;
+    color: #8fa3bb;
+}
+
+.analysis-panel {
+    padding: 35px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    color: #9eb1c7;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #263951;
+    background: #0b1828;
+    color: white;
+    outline: none;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #35d6ff;
+}
+
+.analyze-btn {
+    width: 100%;
+}
+
+/* =========================
+   EXPLANATION
+========================= */
+
+.explanation {
+    padding: 70px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.why-card,
+.action-card {
+    padding: 35px;
+    min-height: 220px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.045);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.why-card h2,
+.action-card h2 {
+    margin: 15px 0;
+}
+
+.why-card p,
+.action-card p {
+    color: #8fa3bb;
+}
+
+/* =========================
+   NIRA EARLY WARNING
+========================= */
+
+.warning-card {
+    display: none;
+    align-items: center;
+    gap: 22px;
+    margin: 30px 6%;
+    padding: 26px 30px;
+    border-radius: 22px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,70,70,0.12),
+        rgba(255,120,70,0.05)
+    );
+
+    border: 1px solid rgba(255,90,90,0.4);
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,0.3),
+        0 0 30px rgba(255,70,70,0.08);
+
+    backdrop-filter: blur(16px);
+    animation: warningAppear 0.4s ease;
+}
+
+.warning-icon {
+    width: 62px;
+    height: 62px;
+    min-width: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 17px;
+
+    background: rgba(255,70,70,0.15);
+    border: 1px solid rgba(255,90,90,0.25);
+
+    font-size: 30px;
+
+    box-shadow: 0 0 25px rgba(255,70,70,0.15);
+}
+
+.warning-content {
+    flex: 1;
+}
+
+.warning-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: #ff8f8f;
+}
+
+.warning-content h2 {
+    margin: 5px 0 7px;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.warning-content p {
+    margin: 0 0 15px;
+    color: #b9c7d9;
+    line-height: 1.6;
+}
+
+.warning-details {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.warning-details span {
+    padding: 7px 12px;
+    border-radius: 9px;
+    background: rgba(255,255,255,0.06);
+    color: #f5f9ff;
+    font-size: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+@keyframes warningAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   RISK MAP
+========================= */
+
+.risk-map-section {
+    padding: 90px 0;
+}
+
+.section-title {
+    margin-bottom: 30px;
+}
+
+.section-title span {
+    color: #35d6ff;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.section-title h2 {
+    margin-top: 10px;
+    font-size: 38px;
+    line-height: 1.1;
+}
+
+.section-title p {
+    margin-top: 12px;
+    color: #8fa3bb;
+    max-width: 650px;
+}
+
+/* MAP CARD */
+
+.risk-map-card {
+    overflow: hidden;
+    border-radius: 26px;
+    background: rgba(255,255,255,0.045);
+    border: 1px solid rgba(255,255,255,0.09);
+    box-shadow: 0 25px 70px rgba(0,0,0,0.25);
+    backdrop-filter: blur(16px);
+}
+
+/* MAP HEADER */
+
+.map-header {
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.map-label {
+    display: block;
+    color: #71869f;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.map-header h3 {
+    margin-top: 5px;
+    font-size: 20px;
+}
+
+/* RISK BADGE */
+
+.map-risk-badge {
+    padding: 9px 16px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #9eb1c7;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* MAP AREA */
+
+.map-area {
+    position: relative;
+    height: 430px;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(53,214,255,0.08),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #081523,
+            #0b1c2d
+        );
+}
+
+/* GRID */
+
+.map-grid {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(53,214,255,0.06) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(53,214,255,0.06) 1px,
+            transparent 1px
+        );
+
+    background-size: 45px 45px;
+
+    opacity: 0.65;
+}
+
+/* MAP ROADS */
+
+.map-road {
+    position: absolute;
+    height: 9px;
+    border-radius: 20px;
+    background: rgba(130,160,190,0.18);
+    box-shadow: 0 0 10px rgba(255,255,255,0.03);
+}
+
+.road-one {
+    width: 120%;
+    top: 42%;
+    left: -10%;
+    transform: rotate(-10deg);
+}
+
+.road-two {
+    width: 110%;
+    top: 65%;
+    left: -5%;
+    transform: rotate(17deg);
+}
+
+.road-three {
+    width: 90%;
+    top: 15%;
+    left: 20%;
+    transform: rotate(75deg);
+}
+
+/* ROAD GLOW LINES */
+
+.map-road::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 100%;
+    height: 2px;
+    background: rgba(53,214,255,0.18);
+}
+
+/* MAP MARKER */
+
+.map-marker {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+
+    width: 70px;
+    height: 70px;
+
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.marker-pulse {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    background: rgba(53,214,255,0.12);
+
+    animation: markerPulse 2s infinite;
+}
+
+.marker-dot {
+    position: relative;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #35d6ff;
+    color: #07111f;
+
+    border: 4px solid rgba(255,255,255,0.8);
+
+    box-shadow:
+        0 0 20px rgba(53,214,255,0.8),
+        0 0 50px rgba(53,214,255,0.35);
+
+    font-size: 10px;
+}
+
+@keyframes markerPulse {
+
+    0% {
+        transform: scale(0.7);
+        opacity: 0.8;
+    }
+
+    70% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* MAP LOCATION CARD */
+
+.map-location-card {
+    position: absolute;
+
+    left: 25px;
+    bottom: 25px;
+
+    min-width: 250px;
+
+    padding: 18px 20px;
+
+    border-radius: 16px;
+
+    background: rgba(7,17,31,0.82);
+    border: 1px solid rgba(255,255,255,0.1);
+
+    backdrop-filter: blur(14px);
+
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.map-location-card span {
+    display: block;
+
+    color: #35d6ff;
+
+    font-size: 9px;
+    font-weight: bold;
+
+    letter-spacing: 2px;
+}
+
+.map-location-card strong {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 17px;
+}
+
+.map-location-card small {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #8fa3bb;
+
+    font-size: 11px;
+}
+
+/* MAP FOOTER */
+
+.map-footer {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+
+    padding: 18px 30px;
+
+    border-top: 1px solid rgba(255,255,255,0.07);
+
+    color: #8fa3bb;
+
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.map-footer div {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-dot.low {
+    background: #3ee58b;
+    box-shadow: 0 0 8px #3ee58b;
+}
+
+.legend-dot.moderate {
+    background: #ffd166;
+    box-shadow: 0 0 8px #ffd166;
+}
+
+.legend-dot.high {
+    background: #ff9f43;
+    box-shadow: 0 0 8px #ff9f43;
+}
+
+.legend-dot.critical {
+    background: #ff5252;
+    box-shadow: 0 0 8px #ff5252;
+}
+
+/* =========================
+   RISK HISTORY
+========================= */
+
+.history-section {
+    padding: 80px 6%;
+}
+
+.history-card {
+    margin-top: 30px;
+    overflow-x: auto;
+    padding: 10px;
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.04);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(14px);
+}
+
+#historyTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 750px;
+}
+
+#historyTable th {
+    padding: 16px;
+    text-align: left;
+
+    font-size: 12px;
+    letter-spacing: 1px;
+
+    color: #8fa8c7;
+
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#historyTable td {
+    padding: 16px;
+
+    color: #e8f1ff;
+
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+
+    font-size: 14px;
+}
+
+#historyTable tr:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+#historyTable td:last-child {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    margin-top: 70px;
+    padding: 35px 7%;
+
+    border-top: 1px solid rgba(255,255,255,0.08);
+
+    display: flex;
+    justify-content: space-between;
+
+    color: #71869f;
+
+    font-size: 13px;
+}
+
+footer strong {
+    color: white;
+    letter-spacing: 2px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 850px) {
+
+    .hero,
+    .analysis,
+    .explanation {
+        grid-template-columns: 1fr;
+    }
+
+    .signal-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .hero {
+        padding: 70px 0;
+    }
+
+    .system-status {
+        display: none;
+    }
+
+    .warning-card {
+        margin: 30px 5%;
+    }
+
+    .map-area {
+        height: 380px;
+    }
+
+    .map-footer {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 500px) {
+
+    main {
+        width: 90%;
+    }
+
+    .signal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h2 {
+        font-size: 45px;
+    }
+
+    .analysis-info h2 {
+        font-size: 35px;
+    }
+
+    .warning-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 22px;
+    }
+
+    .warning-content h2 {
+        font-size: 20px;
+    }
+
+    /* RISK MAP MOBILE */
+
+    .risk-map-section {
+        padding: 60px 0;
+    }
+
+    .section-title h2 {
+        font-size: 30px;
+    }
+
+    .map-header {
+        padding: 20px;
+        gap: 15px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .map-area {
+        height: 350px;
+    }
+
+    .map-location-card {
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        min-width: auto;
+    }
+
+    .map-footer {
+        padding: 15px 20px;
+    }
+
+    footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
