@@ -53,7 +53,6 @@ async function searchLocation() {
 }
 
 
-
 // =====================================
 // GET LIVE WEATHER
 // =====================================
@@ -83,7 +82,7 @@ async function getAutomaticWeather() {
 
             alert(
                 weather.error ||
-                "Unable to retrieve live weather."
+                "Unable to retrieve weather."
             );
 
             return;
@@ -139,12 +138,10 @@ async function getAutomaticWeather() {
         console.error("Weather Error:", error);
 
         alert(
-            "Unable to retrieve live weather. " +
-            "Please check your internet connection."
+            "Unable to retrieve weather. Please try again."
         );
     }
 }
-
 
 
 // =====================================
@@ -236,8 +233,10 @@ async function runAutomaticAnalysis(weather) {
 
 
         if (explanationText) {
+
             explanationText.textContent =
-                result.reason;
+                result.reason ||
+                "NIRA analyzed the available environmental signals.";
         }
 
 
@@ -250,8 +249,10 @@ async function runAutomaticAnalysis(weather) {
 
 
         if (actionText) {
+
             actionText.textContent =
-                result.prevention;
+                result.prevention ||
+                "Continue monitoring the area and follow recommended safety measures.";
         }
 
 
@@ -275,7 +276,6 @@ async function runAutomaticAnalysis(weather) {
 
         loadHistory();
 
-
     } catch (error) {
 
         console.error(
@@ -288,7 +288,6 @@ async function runAutomaticAnalysis(weather) {
         );
     }
 }
-
 
 
 // =====================================
@@ -350,7 +349,6 @@ function updateEarlyWarning(result) {
 }
 
 
-
 // =====================================
 // RISK MAP
 // =====================================
@@ -403,7 +401,6 @@ function updateRiskMap(result) {
 }
 
 
-
 // =====================================
 // MAIN BUTTON
 // =====================================
@@ -413,7 +410,6 @@ function checkRisk() {
     searchLocation();
 
 }
-
 
 
 // =====================================
@@ -438,7 +434,6 @@ function scrollToAnalysis() {
 }
 
 
-
 // =====================================
 // RISK HISTORY
 // =====================================
@@ -460,7 +455,6 @@ async function loadHistory() {
 
         const response =
             await fetch("/api/history");
-
 
         const history =
             await response.json();
@@ -488,33 +482,19 @@ async function loadHistory() {
 
                 <tr>
 
-                    <td>
-                        ${item.id}
-                    </td>
+                    <td>${item.id}</td>
 
-                    <td>
-                        ${item.location}
-                    </td>
+                    <td>${item.location}</td>
 
-                    <td>
-                        ${item.rainfall ?? 0} mm
-                    </td>
+                    <td>${item.rainfall ?? 0} mm</td>
 
-                    <td>
-                        ${item.waterLevel ?? 0}
-                    </td>
+                    <td>${item.waterLevel ?? 0}</td>
 
-                    <td>
-                        ${item.drainage ?? "AUTOMATIC"}
-                    </td>
+                    <td>${item.drainage ?? "AUTOMATIC"}</td>
 
-                    <td>
-                        ${item.score}%
-                    </td>
+                    <td>${item.score}%</td>
 
-                    <td>
-                        ${item.level}
-                    </td>
+                    <td>${item.level}</td>
 
                 </tr>
 
@@ -537,7 +517,6 @@ async function loadHistory() {
         `;
     }
 }
-
 
 
 // =====================================
