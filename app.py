@@ -3,18 +3,10 @@ import sqlite3
 import requests
 from datetime import datetime
 
-
 app = Flask(__name__)
-
 DATABASE = "nira.db"
 
-
-# =========================================================
-# TAMIL NADU 38 DISTRICTS
-# =========================================================
-
 DISTRICTS = {
-
     "Ariyalur": (11.1401, 79.0786),
     "Chengalpattu": (12.6819, 79.9677),
     "Chennai": (13.0827, 80.2707),
@@ -53,93 +45,59 @@ DISTRICTS = {
     "Viluppuram": (11.9401, 79.4861),
     "Virudhunagar": (9.5851, 77.9535),
     "Kanyakumari": (8.0883, 77.5385)
-
 }
 
 
-# =========================================================
-# DATABASE
-# =========================================================
-
 def init_database():
-
     conn = sqlite3.connect(DATABASE)
-
     cursor = conn.cursor()
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS risk_analysis (
-
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-
             location TEXT,
-
             rainfall REAL,
-
             water_level REAL DEFAULT 0,
-
             drainage TEXT DEFAULT 'AUTOMATIC',
-
             risk_score REAL,
-
             risk_level TEXT,
-
             temperature REAL DEFAULT 0,
-
             wind REAL DEFAULT 0,
-
             weather TEXT DEFAULT '',
-
             created_at TEXT
-
         )
     """)
 
-    cursor.execute(
-        "PRAGMA table_info(risk_analysis)"
-    )
-
-    columns = [
-        row[1]
-        for row in cursor.fetchall()
-    ]
+    cursor.execute("PRAGMA table_info(risk_analysis)")
+    columns = [row[1] for row in cursor.fetchall()]
 
     if "temperature" not in columns:
-
         cursor.execute("""
             ALTER TABLE risk_analysis
             ADD COLUMN temperature REAL DEFAULT 0
         """)
 
     if "wind" not in columns:
-
         cursor.execute("""
             ALTER TABLE risk_analysis
             ADD COLUMN wind REAL DEFAULT 0
         """)
 
     if "weather" not in columns:
-
         cursor.execute("""
             ALTER TABLE risk_analysis
             ADD COLUMN weather TEXT DEFAULT ''
         """)
 
     if "created_at" not in columns:
-
         cursor.execute("""
             ALTER TABLE risk_analysis
             ADD COLUMN created_at TEXT
         """)
 
     conn.commit()
-
     conn.close()
 
-
-# =========================================================
-# SAVE ANALYSIS
-# =========================================================
 
 def save_analysis(
     location,
@@ -150,9 +108,7 @@ def save_analysis(
     score,
     level
 ):
-
     conn = sqlite3.connect(DATABASE)
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -171,7 +127,6 @@ def save_analysis(
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
-
         location,
         rainfall,
         0,
@@ -181,75 +136,41 @@ def save_analysis(
         temperature,
         wind,
         weather,
-        datetime.now().strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
-
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     ))
 
     conn.commit()
-
     conn.close()
 
 
-# =========================================================
-# HOME
-# =========================================================
-
 @app.route("/")
 def home():
+    return render_template("index.html")
 
-    return render_template(
-        "index.html"
-    )
-
-
-# =========================================================
-# SYSTEM STATUS
-# =========================================================
 
 @app.route("/api/status")
 def status():
-
     return jsonify({
-
         "system": "NIRA",
-
         "status": "online"
-
     })
 
-
-# =========================================================
-# DISTRICT LOCATION
-# =========================================================
 
 @app.route("/api/location")
 def location_search():
 
-    location = request.args.get(
-        "name",
-        ""
-    ).strip()
+    location = request.args.get("name", "").strip()
 
     if not location:
-
         return jsonify({
-
             "success": False,
-
             "error": "District is required"
-
         }), 400
 
     if location not in DISTRICTS:
-
         return jsonify({
-
             "success": False,
-
             "error": "Tamil Nadu district not found"
-
         }), 404
 
     latitude, longitude = DISTRICTS[location]
@@ -264,61 +185,35 @@ def location_search():
     print("")
 
     return jsonify({
-
         "success": True,
-
         "name": location,
-
         "latitude": latitude,
-
         "longitude": longitude,
-
         "country": "India",
-
         "admin1": "Tamil Nadu",
-
         "timezone": "Asia/Kolkata"
-
     })
 
-
-# =========================================================
-# LIVE WEATHER
-# =========================================================
 
 @app.route("/api/weather")
 def weather():
 
-    latitude = request.args.get(
-        "latitude"
-    )
-
-    longitude = request.args.get(
-        "longitude"
-    )
+    latitude = request.args.get("latitude")
+    longitude = request.args.get("longitude")
 
     if not latitude or not longitude:
-
         return jsonify({
-
             "success": False,
-
             "error": "Coordinates required"
-
         }), 400
 
     try:
 
         response = requests.get(
-
             "https://api.open-meteo.com/v1/forecast",
-
             params={
-
                 "latitude": latitude,
-
                 "longitude": longitude,
-
                 "current": (
                     "temperature_2m,"
                     "precipitation,"
@@ -326,50 +221,50 @@ def weather():
                     "weather_code,"
                     "wind_speed_10m"
                 ),
-
                 "timezone": "auto"
-
             },
-
-            timeout=15
-
+            headers={
+                "User-Agent": "NIRA-College-Project/1.0"
+            },
+            timeout=8
         )
+
+        if response.status_code == 429:
+
+            print("")
+            print("OPEN-METEO RATE LIMIT")
+            print("Using safe demo fallback")
+            print("")
+
+            return jsonify({
+                "success": True,
+                "temperature": 30.0,
+                "rainfall": 0.0,
+                "wind": 10.0,
+                "weather": "Weather service temporarily limited",
+                "fallback": True
+            })
 
         response.raise_for_status()
 
         data = response.json()
 
-        current = data.get(
-            "current",
-            {}
-        )
+        current = data.get("current", {})
 
         temperature = float(
-            current.get(
-                "temperature_2m",
-                0
-            )
+            current.get("temperature_2m", 0)
         )
 
         precipitation = float(
-            current.get(
-                "precipitation",
-                0
-            )
+            current.get("precipitation", 0)
         )
 
         rain = float(
-            current.get(
-                "rain",
-                precipitation
-            )
+            current.get("rain", precipitation)
         )
 
         wind = float(
-            current.get(
-                "wind_speed_10m",
-                0
-            )
+            current.get("wind_speed_10m", 0)
         )
 
         weather_code = current.get(
@@ -381,74 +276,54 @@ def weather():
             weather_code
         )
 
+        print("")
         print("LIVE WEATHER")
         print("Temperature:", temperature)
         print("Rain:", rain)
         print("Wind:", wind)
         print("Weather:", weather_name)
+        print("")
 
         return jsonify({
-
             "success": True,
-
-            "temperature": round(
-                temperature,
-                1
-            ),
-
-            "rainfall": round(
-                rain,
-                1
-            ),
-
-            "wind": round(
-                wind,
-                1
-            ),
-
+            "temperature": round(temperature, 1),
+            "rainfall": round(rain, 1),
+            "wind": round(wind, 1),
             "weather": weather_name
-
         })
 
     except requests.exceptions.RequestException as e:
 
-        print(
-            "WEATHER NETWORK ERROR:",
-            e
-        )
+        print("WEATHER NETWORK ERROR:", e)
+        print("Using safe fallback")
 
         return jsonify({
-
-            "success": False,
-
-            "error": "Weather service unavailable"
-
-        }), 500
+            "success": True,
+            "temperature": 30.0,
+            "rainfall": 0.0,
+            "wind": 10.0,
+            "weather": "Weather service temporarily limited",
+            "fallback": True
+        })
 
     except Exception as e:
 
-        print(
-            "WEATHER ERROR:",
-            e
-        )
+        print("WEATHER ERROR:", e)
+        print("Using safe fallback")
 
         return jsonify({
+            "success": True,
+            "temperature": 30.0,
+            "rainfall": 0.0,
+            "wind": 10.0,
+            "weather": "Weather service temporarily limited",
+            "fallback": True
+        })
 
-            "success": False,
-
-            "error": str(e)
-
-        }), 500
-
-
-# =========================================================
-# WEATHER DESCRIPTION
-# =========================================================
 
 def get_weather_description(code):
 
     descriptions = {
-
         0: "Clear Sky",
         1: "Mainly Clear",
         2: "Partly Cloudy",
@@ -475,7 +350,6 @@ def get_weather_description(code):
         95: "Thunderstorm",
         96: "Thunderstorm with Hail",
         99: "Severe Thunderstorm with Hail"
-
     }
 
     return descriptions.get(
@@ -484,14 +358,7 @@ def get_weather_description(code):
     )
 
 
-# =========================================================
-# NIRA AUTOMATIC RISK ANALYSIS
-# =========================================================
-
-@app.route(
-    "/api/auto-analyze",
-    methods=["POST"]
-)
+@app.route("/api/auto-analyze", methods=["POST"])
 def auto_analyze():
 
     data = request.get_json(
@@ -533,76 +400,49 @@ def auto_analyze():
         )
     )
 
-    # =====================================================
-    # RISK ENGINE
-    # =====================================================
-
     score = 0
 
-    # Rainfall
-
+    # Rainfall risk
     if rainfall >= 30:
-
         score += 50
-
     elif rainfall >= 15:
-
         score += 35
-
     elif rainfall >= 5:
-
         score += 20
-
     elif rainfall > 0:
-
         score += 10
 
-    # Weather
-
+    # Weather risk
     weather_lower = weather.lower()
 
     if (
         "thunder" in weather_lower
-        or
-        "violent" in weather_lower
+        or "violent" in weather_lower
     ):
-
         score += 25
 
     elif (
         "heavy rain" in weather_lower
-        or
-        "heavy" in weather_lower
+        or "heavy" in weather_lower
     ):
-
         score += 20
 
     elif (
         "moderate rain" in weather_lower
-        or
-        "rain showers" in weather_lower
+        or "rain showers" in weather_lower
     ):
-
         score += 10
 
-    # Wind
-
+    # Wind risk
     if wind >= 60:
-
         score += 20
-
     elif wind >= 40:
-
         score += 15
-
     elif wind >= 25:
-
         score += 8
 
-    # Temperature
-
+    # Temperature risk
     if temperature >= 40:
-
         score += 10
 
     score = min(
@@ -610,17 +450,13 @@ def auto_analyze():
         100
     )
 
-    # =====================================================
-    # RISK LEVEL
-    # =====================================================
-
     if score >= 75:
 
         level = "CRITICAL"
 
         prediction = (
-            "NIRA detects a critical environmental risk "
-            "that may develop rapidly."
+            "NIRA detects a critical environmental "
+            "risk that may develop rapidly."
         )
 
         prevention = (
@@ -632,7 +468,8 @@ def auto_analyze():
         expected_time = "Within 1–3 hours"
 
         reason = (
-            "High-risk weather indicators are currently present."
+            "High-risk weather indicators are "
+            "currently present."
         )
 
     elif score >= 50:
@@ -646,15 +483,15 @@ def auto_analyze():
 
         prevention = (
             "Monitor the area closely, clear possible "
-            "drainage blockages, and alert the respective "
-            "in-charge."
+            "drainage blockages, and alert the "
+            "respective in-charge."
         )
 
         expected_time = "Within 3–6 hours"
 
         reason = (
-            "The combination of current weather conditions "
-            "has increased the risk score."
+            "The combination of current weather "
+            "conditions has increased the risk score."
         )
 
     elif score >= 25:
@@ -674,7 +511,8 @@ def auto_analyze():
         expected_time = "Within 6–12 hours"
 
         reason = (
-            "Moderate environmental signals were detected."
+            "Moderate environmental signals "
+            "were detected."
         )
 
     else:
@@ -682,28 +520,25 @@ def auto_analyze():
         level = "LOW"
 
         prediction = (
-            "NIRA currently detects a low environmental risk."
+            "NIRA currently detects a low "
+            "environmental risk."
         )
 
         prevention = (
-            "No immediate action is required. Continue "
-            "normal monitoring of the area."
+            "No immediate action is required. "
+            "Continue normal monitoring of the area."
         )
 
         expected_time = "No immediate threat"
 
         reason = (
-            "Current weather indicators remain relatively stable."
+            "Current weather indicators "
+            "remain relatively stable."
         )
 
     probability = score
 
-    # =====================================================
-    # SAVE RESULT
-    # =====================================================
-
     save_analysis(
-
         location,
         rainfall,
         temperature,
@@ -711,56 +546,24 @@ def auto_analyze():
         weather,
         score,
         level
-
     )
 
-    # =====================================================
-    # RETURN RESULT
-    # =====================================================
-
     return jsonify({
-
         "success": True,
-
         "location": location,
-
-        "rainfall": round(
-            rainfall,
-            1
-        ),
-
-        "temperature": round(
-            temperature,
-            1
-        ),
-
-        "wind": round(
-            wind,
-            1
-        ),
-
+        "rainfall": round(rainfall, 1),
+        "temperature": round(temperature, 1),
+        "wind": round(wind, 1),
         "weather": weather,
-
         "score": score,
-
         "probability": probability,
-
         "level": level,
-
         "prediction": prediction,
-
         "expectedTime": expected_time,
-
         "reason": reason,
-
         "prevention": prevention
-
     })
 
-
-# =========================================================
-# HISTORY
-# =========================================================
 
 @app.route("/api/history")
 def history():
@@ -777,33 +580,19 @@ def history():
 
         cursor.execute("""
             SELECT
-
                 id,
-
                 location,
-
                 rainfall,
-
                 water_level,
-
                 drainage,
-
                 risk_score,
-
                 risk_level,
-
                 temperature,
-
                 wind,
-
                 weather,
-
                 created_at
-
             FROM risk_analysis
-
             ORDER BY id DESC
-
             LIMIT 20
         """)
 
@@ -816,40 +605,17 @@ def history():
         for row in rows:
 
             history_data.append({
-
-                "id":
-                    row["id"],
-
-                "location":
-                    row["location"],
-
-                "rainfall":
-                    row["rainfall"],
-
-                "waterLevel":
-                    row["water_level"],
-
-                "drainage":
-                    row["drainage"],
-
-                "score":
-                    row["risk_score"],
-
-                "level":
-                    row["risk_level"],
-
-                "temperature":
-                    row["temperature"],
-
-                "wind":
-                    row["wind"],
-
-                "weather":
-                    row["weather"],
-
-                "createdAt":
-                    row["created_at"]
-
+                "id": row["id"],
+                "location": row["location"],
+                "rainfall": row["rainfall"],
+                "waterLevel": row["water_level"],
+                "drainage": row["drainage"],
+                "score": row["risk_score"],
+                "level": row["risk_level"],
+                "temperature": row["temperature"],
+                "wind": row["wind"],
+                "weather": row["weather"],
+                "createdAt": row["created_at"]
             })
 
         return jsonify(
@@ -866,57 +632,35 @@ def history():
         return jsonify([])
 
 
-# =========================================================
-# DATABASE INITIALIZATION
-# =========================================================
-
 init_database()
 
-
-# =========================================================
-# START APPLICATION
-# =========================================================
 
 if __name__ == "__main__":
 
     print("")
-
     print("===================================")
-
     print("        NIRA SYSTEM STARTED")
-
     print("===================================")
-
     print(
         "NIRA: Networked Intelligent Risk Analyzer"
     )
-
     print(
         "Location: Tamil Nadu - 38 Districts"
     )
-
     print(
         "Live Weather: Enabled"
     )
-
     print(
         "Risk Analysis: Enabled"
     )
-
     print(
         "Database: SQLite"
     )
-
     print("===================================")
-
     print("")
 
     app.run(
-
         host="127.0.0.1",
-
         port=5000,
-
         debug=True
-
     )
